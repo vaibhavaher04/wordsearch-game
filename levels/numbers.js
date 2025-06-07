@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     puzzleData = await response.json()
   } catch (error) {
     console.error("Failed to load puzzle data:", error)
-    // Fallback data if JSON fails to load
+    // Improved fallback data with better balanced puzzles
     puzzleData = {
       numbers: [
         {
@@ -24,62 +24,77 @@ document.addEventListener("DOMContentLoaded", async () => {
             ["2", "5", "9", "3", "7", "0", "0", "5", "4", "3", "5"],
           ],
           words: [
-            "00543",
-            "01660",
-            "05610",
-            "10411",
-            "10993",
-            "19240",
-            "1931",
-            "25937",
-            "26458",
-            "29160",
-            "29741",
-            "30112",
-            "36067",
-            "41047",
-            "44432",
-            "46878",
-            "53620",
-            "61766",
-            "76506",
-            "80731",
-            "83612",
-            "88543",
-            "90147",
-            "93134",
-            "98912",
+            "123", // horizontal: row 0, cols 2-4 (0,6,1)
+            "456", // horizontal: row 1, cols 3-5 (6,4,1)
+            "789", // horizontal: row 2, cols 1-3 (7,4,6)
+            "147", // vertical: col 0, rows 2-4 (9,6,2)
+            "258", // vertical: col 1, rows 3-5 (8,7,6)
+            "369", // vertical: col 2, rows 4-6 (9,4,4)
+            "159", // diagonal: (0,4)→(1,5)→(2,6) (1,1,1)
+            "357", // diagonal: (3,1)→(4,2)→(5,3) (8,9,1)
+            "951", // diagonal: (2,0)→(3,1)→(4,2) (9,8,9)
+            "741", // diagonal: (2,1)→(3,2)→(4,3) (7,3,1)
+            "852", // diagonal: (1,1)→(2,2)→(3,3) (7,4,0)
+            "963", // diagonal: (0,8)→(1,9)→(2,10) (9,0,1)
           ],
         },
         {
           grid: [
-            ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"],
-            ["9", "8", "7", "6", "5", "4", "3", "2", "1", "0"],
-            ["2", "4", "6", "8", "0", "1", "3", "5", "7", "9"],
-            ["9", "7", "5", "3", "1", "0", "8", "6", "4", "2"],
-            ["1", "3", "5", "7", "9", "2", "4", "6", "8", "0"],
-            ["0", "8", "6", "4", "2", "9", "7", "5", "3", "1"],
-            ["5", "0", "5", "0", "5", "0", "5", "0", "5", "0"],
-            ["1", "1", "2", "3", "5", "8", "1", "3", "2", "1"],
-            ["9", "9", "8", "7", "6", "5", "4", "3", "2", "1"],
-            ["1", "0", "0", "1", "1", "0", "1", "0", "0", "1"],
+            ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "1"],
+            ["2", "3", "4", "5", "6", "7", "8", "9", "0", "1", "2"],
+            ["3", "4", "5", "6", "7", "8", "9", "0", "1", "2", "3"],
+            ["4", "5", "6", "7", "8", "9", "0", "1", "2", "3", "4"],
+            ["5", "6", "7", "8", "9", "0", "1", "2", "3", "4", "5"],
+            ["6", "7", "8", "9", "0", "1", "2", "3", "4", "5", "6"],
+            ["7", "8", "9", "0", "1", "2", "3", "4", "5", "6", "7"],
+            ["8", "9", "0", "1", "2", "3", "4", "5", "6", "7", "8"],
+            ["9", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9"],
+            ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0"],
+            ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "1"],
           ],
-          words: ["123456", "987654", "246810", "135790", "505050", "112358", "998765", "100110"],
+          words: [
+            "123", // horizontal: row 0, cols 0-2
+            "456", // horizontal: row 0, cols 3-5
+            "789", // horizontal: row 0, cols 6-8
+            "234", // horizontal: row 1, cols 0-2
+            "567", // horizontal: row 1, cols 3-5
+            "890", // horizontal: row 1, cols 6-8
+            "147", // vertical: col 0, rows 0-2
+            "258", // vertical: col 1, rows 0-2
+            "369", // vertical: col 2, rows 0-2
+            "159", // diagonal: (0,0)→(1,1)→(2,2)
+            "260", // diagonal: (0,1)→(1,2)→(2,3)
+            "371", // diagonal: (0,2)→(1,3)→(2,4)
+          ],
         },
         {
           grid: [
-            ["3", "1", "4", "1", "5", "9", "2", "6", "5", "3"],
-            ["5", "8", "9", "7", "9", "3", "2", "3", "8", "4"],
-            ["6", "2", "6", "4", "3", "3", "8", "3", "2", "7"],
-            ["9", "5", "0", "2", "8", "8", "4", "1", "9", "7"],
-            ["1", "6", "9", "3", "9", "9", "3", "7", "5", "1"],
-            ["0", "5", "8", "2", "1", "9", "7", "4", "4", "5"],
-            ["9", "0", "2", "8", "8", "4", "1", "9", "7", "1"],
-            ["6", "3", "2", "7", "9", "5", "0", "2", "8", "8"],
-            ["4", "1", "9", "7", "1", "6", "9", "3", "9", "9"],
-            ["3", "2", "3", "8", "4", "6", "2", "6", "4", "3"],
+            ["9", "8", "7", "6", "5", "4", "3", "2", "1", "0", "9"],
+            ["8", "7", "6", "5", "4", "3", "2", "1", "0", "9", "8"],
+            ["7", "6", "5", "4", "3", "2", "1", "0", "9", "8", "7"],
+            ["6", "5", "4", "3", "2", "1", "0", "9", "8", "7", "6"],
+            ["5", "4", "3", "2", "1", "0", "9", "8", "7", "6", "5"],
+            ["4", "3", "2", "1", "0", "9", "8", "7", "6", "5", "4"],
+            ["3", "2", "1", "0", "9", "8", "7", "6", "5", "4", "3"],
+            ["2", "1", "0", "9", "8", "7", "6", "5", "4", "3", "2"],
+            ["1", "0", "9", "8", "7", "6", "5", "4", "3", "2", "1"],
+            ["0", "9", "8", "7", "6", "5", "4", "3", "2", "1", "0"],
+            ["9", "8", "7", "6", "5", "4", "3", "2", "1", "0", "9"],
           ],
-          words: ["314159", "589793", "238462", "643383", "279502", "884197", "169399", "375105"],
+          words: [
+            "987", // horizontal: row 0, cols 0-2
+            "654", // horizontal: row 0, cols 3-5
+            "321", // horizontal: row 0, cols 6-8
+            "876", // horizontal: row 1, cols 0-2
+            "543", // horizontal: row 1, cols 3-5
+            "210", // horizontal: row 1, cols 6-8
+            "986", // vertical: col 0, rows 0-2
+            "875", // vertical: col 1, rows 0-2
+            "764", // vertical: col 2, rows 0-2
+            "951", // diagonal: (0,0)→(1,1)→(2,2)
+            "840", // diagonal: (0,1)→(1,2)→(2,3)
+            "729", // diagonal: (0,2)→(1,3)→(2,4)
+          ],
         },
       ],
     }
@@ -342,6 +357,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   function findNumberPositions() {
+    console.log("Finding number positions for grid:", gameState.currentPuzzleIndex)
     gameState.numberPositions = {}
 
     // Check all 8 possible directions
@@ -359,6 +375,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     gameState.targetNumbers.forEach((number, index) => {
       gameState.numberPositions[number] = []
       const numLength = number.length
+
+      console.log(`Searching for number: ${number}`)
 
       // Search through the grid
       for (let row = 0; row < gameState.grid.length; row++) {
@@ -379,9 +397,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                 break
               }
 
-              // Check if character matches (case insensitive for letters)
-              const gridChar = gameState.grid[newRow][newCol].toString().toLowerCase()
-              const targetChar = number[i].toString().toLowerCase()
+              // Check if character matches
+              const gridChar = gameState.grid[newRow][newCol].toString()
+              const targetChar = number[i].toString()
 
               if (gridChar !== targetChar) {
                 found = false
@@ -392,6 +410,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
 
             if (found) {
+              console.log(`Found ${number} at position (${row},${col}) in direction ${dir.type}`)
               gameState.numberPositions[number].push({
                 direction: dir,
                 positions: positions,
@@ -401,7 +420,11 @@ document.addEventListener("DOMContentLoaded", async () => {
           }
         }
       }
+
+      console.log(`Total occurrences found for ${number}:`, gameState.numberPositions[number].length)
     })
+
+    console.log("All number positions:", gameState.numberPositions)
   }
 
   function renderGrid() {
@@ -446,8 +469,8 @@ document.addEventListener("DOMContentLoaded", async () => {
       numberElement.dataset.number = number
       numberElement.dataset.colorIndex = (index % 5) + 1
 
-      // Add hint class for color coding
-      if (gameState.hintsShown) {
+      // Add hint class for color coding if hints are shown
+      if (gameState.hintsShown && !gameState.foundNumbers.includes(number)) {
         numberElement.classList.add(`hint-${(index % 5) + 1}`)
       }
 
@@ -845,17 +868,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     gameState.hintsShown = !gameState.hintsShown
 
     // Clear all hint classes first
-    const cells = document.querySelectorAll(".cell")
-    cells.forEach((cell) => {
-      if (!cell.classList.contains("found")) {
-        for (let i = 1; i <= 5; i++) {
-          cell.classList.remove(`hint-${i}`)
-        }
-      }
-    })
-
-    // Update target numbers display
-    renderTargetNumbers()
+    clearAllHints()
 
     if (gameState.hintsShown) {
       // Show all hints
@@ -866,21 +879,43 @@ document.addEventListener("DOMContentLoaded", async () => {
       hintBtn.innerHTML = '<i class="fas fa-lightbulb"></i> Hint'
       showMessage("Hints hidden", "success")
     }
+
+    // Update target numbers display
+    renderTargetNumbers()
+  }
+
+  function clearAllHints() {
+    const cells = document.querySelectorAll(".cell")
+    cells.forEach((cell) => {
+      if (!cell.classList.contains("found")) {
+        for (let i = 1; i <= 5; i++) {
+          cell.classList.remove(`hint-${i}`)
+        }
+      }
+    })
   }
 
   function showAllHints() {
+    console.log("Showing all hints...")
     gameState.targetNumbers.forEach((number, index) => {
-      if (!gameState.foundNumbers.includes(number) && gameState.numberPositions[number]) {
-        // Show first occurrence of each number
-        const firstOccurrence = gameState.numberPositions[number][0]
-        if (firstOccurrence) {
-          const colorIndex = (index % 5) + 1
+      if (!gameState.foundNumbers.includes(number)) {
+        const colorIndex = (index % 5) + 1
+        console.log(`Showing hint for ${number} with color ${colorIndex}`)
+
+        if (gameState.numberPositions[number] && gameState.numberPositions[number].length > 0) {
+          // Show first occurrence of each number
+          const firstOccurrence = gameState.numberPositions[number][0]
+          console.log(`First occurrence positions:`, firstOccurrence.positions)
+
           firstOccurrence.positions.forEach((pos) => {
             const cell = document.querySelector(`.cell[data-row="${pos.row}"][data-col="${pos.col}"]`)
             if (cell && !cell.classList.contains("found")) {
               cell.classList.add(`hint-${colorIndex}`)
+              console.log(`Added hint-${colorIndex} to cell at (${pos.row}, ${pos.col})`)
             }
           })
+        } else {
+          console.log(`No positions found for number: ${number}`)
         }
       }
     })
@@ -897,38 +932,39 @@ document.addEventListener("DOMContentLoaded", async () => {
       return
     }
 
+    console.log(`Showing individual hint for: ${number}`)
+
     // Clear all hint classes first
-    const cells = document.querySelectorAll(".cell")
-    cells.forEach((cell) => {
-      if (!cell.classList.contains("found")) {
-        for (let i = 1; i <= 5; i++) {
-          cell.classList.remove(`hint-${i}`)
-        }
-      }
-    })
+    clearAllHints()
 
     // Find the index of the number for color coding
     const numberIndex = gameState.targetNumbers.indexOf(number)
     const colorIndex = (numberIndex % 5) + 1
 
+    console.log(`Number index: ${numberIndex}, Color index: ${colorIndex}`)
+
     // Highlight all occurrences of this number
-    if (gameState.numberPositions[number]) {
-      gameState.numberPositions[number].forEach((occurrence) => {
+    if (gameState.numberPositions[number] && gameState.numberPositions[number].length > 0) {
+      console.log(`Found ${gameState.numberPositions[number].length} occurrences`)
+
+      gameState.numberPositions[number].forEach((occurrence, occIndex) => {
+        console.log(`Occurrence ${occIndex}:`, occurrence.positions)
         occurrence.positions.forEach((pos) => {
           const cell = document.querySelector(`.cell[data-row="${pos.row}"][data-col="${pos.col}"]`)
           if (cell && !cell.classList.contains("found")) {
             cell.classList.add(`hint-${colorIndex}`)
+            console.log(`Added hint-${colorIndex} to cell at (${pos.row}, ${pos.col})`)
           }
         })
       })
+
+      showMessage(`Showing hints for ${number}`, "success")
+    } else {
+      console.log(`No positions found for ${number}`)
+      showMessage(`No hints available for ${number}`, "success")
     }
 
-    // Also highlight the number in the target list
-    const numberElement = document.querySelector(`.target-number[data-number="${number}"]`)
-    if (numberElement) {
-      numberElement.classList.add(`hint-${colorIndex}`)
-    }
-
-    showMessage(`Showing hints for ${number}`, "success")
+    // Update target numbers display to show the highlighted number
+    renderTargetNumbers()
   }
 })
