@@ -3,99 +3,122 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simple Word Search Game</title>
+    <title>Word Search Game</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    <div class="game-container">
-        <!-- Animated Background -->
-        <div class="animated-background">
-            <div class="gradient-orb orb-1"></div>
-            <div class="gradient-orb orb-2"></div>
-            <div class="gradient-orb orb-3"></div>
+    <div class="container">
+        <!-- Background Elements -->
+        <div class="background-shapes">
+            <div class="shape shape-1"></div>
+            <div class="shape shape-2"></div>
+            <div class="shape shape-3"></div>
         </div>
 
-        <header>
+        <!-- Header -->
+        <header class="header">
             <div class="logo">
-                <div class="bars-icon animated-bars">
-                    <div class="bar"></div>
-                    <div class="bar"></div>
-                    <div class="bar"></div>
+                <div class="logo-icon">
+                    <i class="fas fa-search"></i>
                 </div>
-                <div class="title">
-                    <span class="letter-box animate-letter" style="animation-delay: 0.1s">W</span>
-                    <span class="letter-box animate-letter" style="animation-delay: 0.2s">O</span>
-                    <span class="letter-box animate-letter" style="animation-delay: 0.3s">R</span>
-                    <span class="letter-box animate-letter" style="animation-delay: 0.4s">D</span>
-                    <span class="title-text animate-title">SEARCH</span>
-                </div>
-                <div class="menu-icon animated-bars">
-                    <div class="bar"></div>
-                    <div class="bar"></div>
-                    <div class="bar"></div>
-                </div>
+                <h1 class="logo-text">WordSearch</h1>
+            </div>
+            <div class="score-display">
+                <i class="fas fa-trophy"></i>
+                <span>Best: <span id="highScore">0</span></span>
             </div>
         </header>
 
-        <main>
-            <div class="home-screen">
-                <!-- Game Name -->
-                <div class="game-name animate-fade-in">
-                    <h1 class="main-title">Simple Word Search</h1>
-                    <div class="title-underline"></div>
-                </div>
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="hero-section">
+                <h2 class="game-title">Find Hidden Words</h2>
+                <p class="game-subtitle">Challenge your mind with our exciting word search puzzles</p>
+            </div>
 
-                <h2 class="select-text animate-fade-in">Select Difficulty:</h2>
-                
-                <div class="level-buttons">
-                    <a href="levels/easy.html" class="level-btn animate-slide-up" style="animation-delay: 0.1s">
-                        <span class="btn-text">Easy</span>
-                        <div class="btn-glow"></div>
-                    </a>
-                    <a href="levels/medium.html" class="level-btn animate-slide-up" style="animation-delay: 0.2s">
-                        <span class="btn-text">Medium</span>
-                        <div class="btn-glow"></div>
-                    </a>
-                    <a href="levels/hard.html" class="level-btn animate-slide-up" style="animation-delay: 0.3s">
-                        <span class="btn-text">Hard</span>
-                        <div class="btn-glow"></div>
-                    </a>
-                    <a href="levels/expert.html" class="level-btn animate-slide-up" style="animation-delay: 0.4s">
-                        <span class="btn-text">Expert</span>
-                        <div class="btn-glow"></div>
-                    </a>
-                    <a href="levels/numbers.html" class="level-btn animate-slide-up" style="animation-delay: 0.5s">
-                        <span class="btn-text">Numbers</span>
-                        <div class="btn-glow"></div>
-                    </a>
-                </div>
+            <div class="difficulty-grid">
+                <a href="levels/easy.html" class="difficulty-card easy" data-level="easy">
+                    <div class="card-icon">
+                        <i class="fas fa-seedling"></i>
+                    </div>
+                    <h3>Easy</h3>
+                    <p>Perfect for beginners</p>
+                    <div class="card-stats">
+                        <span><i class="fas fa-clock"></i> 5 min</span>
+                        <span><i class="fas fa-grid-3x3"></i> 8x8</span>
+                    </div>
+                </a>
 
-                <!-- Enhanced Floating Elements -->
-                <div class="floating-letters">
-                    <!-- Letters will be dynamically added with JavaScript -->
-                </div>
-                
-                <div class="floating-particles">
-                    <!-- Particles will be dynamically added with JavaScript -->
-                </div>
+                <a href="levels/medium.html" class="difficulty-card medium" data-level="medium">
+                    <div class="card-icon">
+                        <i class="fas fa-fire"></i>
+                    </div>
+                    <h3>Medium</h3>
+                    <p>For casual players</p>
+                    <div class="card-stats">
+                        <span><i class="fas fa-clock"></i> 8 min</span>
+                        <span><i class="fas fa-grid-3x3"></i> 10x10</span>
+                    </div>
+                </a>
 
-                <div class="word-bubbles">
-                    <!-- Word bubbles will be dynamically added with JavaScript -->
+                <a href="levels/hard.html" class="difficulty-card hard" data-level="hard">
+                    <div class="card-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <h3>Hard</h3>
+                    <p>Test your skills</p>
+                    <div class="card-stats">
+                        <span><i class="fas fa-clock"></i> 12 min</span>
+                        <span><i class="fas fa-grid-3x3"></i> 12x12</span>
+                    </div>
+                </a>
+
+                <a href="levels/expert.html" class="difficulty-card expert" data-level="expert">
+                    <div class="card-icon">
+                        <i class="fas fa-crown"></i>
+                    </div>
+                    <h3>Expert</h3>
+                    <p>Ultimate challenge</p>
+                    <div class="card-stats">
+                        <span><i class="fas fa-clock"></i> 15 min</span>
+                        <span><i class="fas fa-grid-3x3"></i> 15x15</span>
+                    </div>
+                </a>
+
+                <a href="levels/numbers.html" class="difficulty-card numbers" data-level="numbers">
+                    <div class="card-icon">
+                        <i class="fas fa-hashtag"></i>
+                    </div>
+                    <h3>Numbers</h3>
+                    <p>Find number sequences</p>
+                    <div class="card-stats">
+                        <span><i class="fas fa-clock"></i> 10 min</span>
+                        <span><i class="fas fa-grid-3x3"></i> 11x11</span>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Features Section -->
+            <div class="features-section">
+                <div class="feature">
+                    <i class="fas fa-mobile-alt"></i>
+                    <span>Play Anywhere</span>
+                </div>
+                <div class="feature">
+                    <i class="fas fa-brain"></i>
+                    <span>Train Your Brain</span>
+                </div>
+                <div class="feature">
+                    <i class="fas fa-infinity"></i>
+                    <span>Unlimited Puzzles</span>
                 </div>
             </div>
         </main>
 
-        <div class="score-container animate-fade-in">
-            <div class="high-score glow-text">
-                <span class="score-label">High Score:</span>
-                <span id="high-score" class="score-value">0</span>
-            </div>
-        </div>
-
-        <audio id="background-music" loop>
-            <source src="assets/sounds/background-music.mp3" type="audio/mp3">
-        </audio>
+        <!-- Floating Letters Animation -->
+        <div class="floating-letters" id="floatingLetters"></div>
     </div>
 
     <script src="script.js"></script>

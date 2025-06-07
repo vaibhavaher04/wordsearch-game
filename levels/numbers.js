@@ -1,4 +1,90 @@
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
+  // Load puzzle data
+  let puzzleData = null
+  try {
+    const response = await fetch("../data/fallbackPuzzles.json")
+    puzzleData = await response.json()
+  } catch (error) {
+    console.error("Failed to load puzzle data:", error)
+    // Fallback data if JSON fails to load
+    puzzleData = {
+      numbers: [
+        {
+          grid: [
+            ["6", "5", "0", "6", "1", "9", "2", "1", "9", "3", "1"],
+            ["8", "7", "8", "6", "4", "1", "9", "2", "4", "0", "3"],
+            ["9", "7", "4", "6", "1", "3", "1", "1", "4", "0", "1"],
+            ["6", "8", "3", "0", "1", "1", "2", "5", "8", "0", "4"],
+            ["2", "7", "9", "3", "1", "2", "2", "2", "2", "1", "6"],
+            ["3", "6", "4", "1", "9", "4", "3", "1", "9", "6", "2"],
+            ["4", "0", "4", "1", "2", "9", "6", "4", "7", "5", "0"],
+            ["5", "6", "6", "5", "0", "3", "0", "1", "4", "0", "2"],
+            ["8", "3", "0", "6", "8", "9", "6", "1", "1", "4", "6"],
+            ["8", "0", "7", "3", "1", "6", "0", "5", "6", "7", "3"],
+            ["2", "5", "9", "3", "7", "0", "0", "5", "4", "3", "5"],
+          ],
+          words: [
+            "00543",
+            "01660",
+            "05610",
+            "10411",
+            "10993",
+            "19240",
+            "1931",
+            "25937",
+            "26458",
+            "29160",
+            "29741",
+            "30112",
+            "36067",
+            "41047",
+            "44432",
+            "46878",
+            "53620",
+            "61766",
+            "76506",
+            "80731",
+            "83612",
+            "88543",
+            "90147",
+            "93134",
+            "98912",
+          ],
+        },
+        {
+          grid: [
+            ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"],
+            ["9", "8", "7", "6", "5", "4", "3", "2", "1", "0"],
+            ["2", "4", "6", "8", "0", "1", "3", "5", "7", "9"],
+            ["9", "7", "5", "3", "1", "0", "8", "6", "4", "2"],
+            ["1", "3", "5", "7", "9", "2", "4", "6", "8", "0"],
+            ["0", "8", "6", "4", "2", "9", "7", "5", "3", "1"],
+            ["5", "0", "5", "0", "5", "0", "5", "0", "5", "0"],
+            ["1", "1", "2", "3", "5", "8", "1", "3", "2", "1"],
+            ["9", "9", "8", "7", "6", "5", "4", "3", "2", "1"],
+            ["1", "0", "0", "1", "1", "0", "1", "0", "0", "1"],
+          ],
+          words: ["123456", "987654", "246810", "135790", "505050", "112358", "998765", "100110"],
+        },
+        {
+          grid: [
+            ["3", "1", "4", "1", "5", "9", "2", "6", "5", "3"],
+            ["5", "8", "9", "7", "9", "3", "2", "3", "8", "4"],
+            ["6", "2", "6", "4", "3", "3", "8", "3", "2", "7"],
+            ["9", "5", "0", "2", "8", "8", "4", "1", "9", "7"],
+            ["1", "6", "9", "3", "9", "9", "3", "7", "5", "1"],
+            ["0", "5", "8", "2", "1", "9", "7", "4", "4", "5"],
+            ["9", "0", "2", "8", "8", "4", "1", "9", "7", "1"],
+            ["6", "3", "2", "7", "9", "5", "0", "2", "8", "8"],
+            ["4", "1", "9", "7", "1", "6", "9", "3", "9", "9"],
+            ["3", "2", "3", "8", "4", "6", "2", "6", "4", "3"],
+          ],
+          words: ["314159", "589793", "238462", "643383", "279502", "884197", "169399", "375105"],
+        },
+      ],
+    }
+  }
+
   // Game state
   const gameState = {
     grid: [],
@@ -10,150 +96,16 @@ document.addEventListener("DOMContentLoaded", () => {
     isSelecting: false,
     currentDirection: null,
     gameTime: 180, // 3 minutes in seconds
+    originalGameTime: 180,
     timerInterval: null,
     isGameRunning: false,
     hintsShown: false,
-    numberPositions: {}, // Stores positions of all target numbers
-    colorIndex: 1, // Track color index for selections
-    activeSelections: {}, // Track active selections by number
+    numberPositions: {},
+    colorIndex: 1,
+    activeSelections: {},
+    currentDifficulty: "numbers",
+    currentPuzzleIndex: 0,
   }
-
-  // Sample grids for new grid functionality
-  const sampleGrids = [
-    // Grid 1
-    [
-      ["6", "5", "0", "6", "1", "9", "2", "1", "9", "3", "1"],
-      ["8", "7", "8", "6", "4", "1", "9", "2", "4", "0", "3"],
-      ["9", "7", "4", "6", "1", "3", "1", "1", "4", "0", "1"],
-      ["6", "8", "3", "0", "1", "1", "2", "5", "8", "0", "4"],
-      ["2", "7", "9", "3", "1", "2", "2", "2", "2", "1", "6"],
-      ["3", "6", "4", "1", "9", "4", "3", "1", "9", "6", "2"],
-      ["4", "0", "4", "1", "2", "9", "6", "4", "7", "5", "0"],
-      ["5", "6", "6", "5", "0", "3", "0", "1", "4", "0", "2"],
-      ["8", "3", "0", "6", "8", "9", "6", "1", "1", "4", "6"],
-      ["8", "0", "7", "3", "1", "6", "0", "5", "6", "7", "3"],
-      ["2", "5", "9", "3", "7", "0", "0", "5", "4", "3", "5"],
-    ],
-    // Grid 2
-    [
-      ["3", "1", "4", "2", "7", "5", "9", "0", "8", "6", "2"],
-      ["7", "0", "9", "5", "3", "1", "4", "8", "2", "6", "7"],
-      ["5", "2", "8", "6", "0", "9", "3", "7", "1", "4", "5"],
-      ["1", "9", "3", "7", "4", "2", "6", "5", "0", "8", "1"],
-      ["8", "6", "2", "0", "5", "7", "1", "3", "9", "4", "8"],
-      ["4", "7", "5", "1", "9", "8", "2", "6", "3", "0", "4"],
-      ["9", "3", "7", "4", "2", "0", "8", "1", "5", "6", "9"],
-      ["2", "5", "0", "8", "6", "3", "7", "4", "1", "9", "2"],
-      ["6", "8", "1", "3", "0", "4", "5", "9", "7", "2", "6"],
-      ["0", "4", "6", "9", "1", "5", "3", "2", "8", "7", "0"],
-      ["3", "1", "4", "2", "7", "5", "9", "0", "8", "6", "3"],
-    ],
-    // Grid 3
-    [
-      ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "1"],
-      ["2", "3", "4", "5", "6", "7", "8", "9", "0", "1", "2"],
-      ["3", "4", "5", "6", "7", "8", "9", "0", "1", "2", "3"],
-      ["4", "5", "6", "7", "8", "9", "0", "1", "2", "3", "4"],
-      ["5", "6", "7", "8", "9", "0", "1", "2", "3", "4", "5"],
-      ["6", "7", "8", "9", "0", "1", "2", "3", "4", "5", "6"],
-      ["7", "8", "9", "0", "1", "2", "3", "4", "5", "6", "7"],
-      ["8", "9", "0", "1", "2", "3", "4", "5", "6", "7", "8"],
-      ["9", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9"],
-      ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0"],
-      ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "1"],
-    ],
-  ]
-
-  // Sample target numbers for each grid
-  const sampleTargets = [
-    // Targets for Grid 1
-    [
-      "00543",
-      "01660",
-      "05610",
-      "10411",
-      "10993",
-      "19240",
-      "1931",
-      "25937",
-      "26458",
-      "29160",
-      "29741",
-      "30112",
-      "36067",
-      "41047",
-      "44432",
-      "46878",
-      "53620",
-      "61766",
-      "76506",
-      "80731",
-      "83612",
-      "88543",
-      "90147",
-      "93134",
-      "98912",
-    ],
-    // Targets for Grid 2
-    [
-      "12345",
-      "23456",
-      "34567",
-      "45678",
-      "56789",
-      "67890",
-      "78901",
-      "89012",
-      "90123",
-      "01234",
-      "13579",
-      "24680",
-      "02468",
-      "13579",
-      "14725",
-      "25836",
-      "36947",
-      "47058",
-      "58169",
-      "69270",
-      "70381",
-      "81492",
-      "92503",
-      "03614",
-      "14725",
-    ],
-    // Targets for Grid 3
-    [
-      "123",
-      "234",
-      "345",
-      "456",
-      "567",
-      "678",
-      "789",
-      "890",
-      "901",
-      "012",
-      "135",
-      "246",
-      "357",
-      "468",
-      "579",
-      "680",
-      "791",
-      "802",
-      "913",
-      "024",
-      "147",
-      "258",
-      "369",
-      "470",
-      "581",
-    ],
-  ]
-
-  // Current grid index
-  let currentGridIndex = 0
 
   // DOM elements
   const numberGrid = document.getElementById("numberGrid")
@@ -167,8 +119,14 @@ document.addEventListener("DOMContentLoaded", () => {
   const timerSecondsElement = document.getElementById("timerSeconds")
   const decreaseTimeBtn = document.getElementById("decreaseTime")
   const increaseTimeBtn = document.getElementById("increaseTime")
-  const startTimerBtn = document.getElementById("startTimer")
+  const startStopBtn = document.getElementById("startStopBtn")
   const hintBtn = document.getElementById("hintBtn")
+  const difficultySelect = document.getElementById("difficultySelect")
+  const gameOverOverlay = document.getElementById("gameOverOverlay")
+  const extendTimeBtn = document.getElementById("extendTimeBtn")
+  const acceptFateBtn = document.getElementById("acceptFateBtn")
+  const foundCountElement = document.getElementById("foundCount")
+  const totalCountElement = document.getElementById("totalCount")
 
   // Initialize the game
   initGame()
@@ -176,12 +134,15 @@ document.addEventListener("DOMContentLoaded", () => {
   // Event listeners
   newGridBtn.addEventListener("click", switchToNextGrid)
   mainMenuBtn.addEventListener("click", () => {
-    alert("Returning to main menu...")
+    window.location.href = "../index.html"
   })
   decreaseTimeBtn.addEventListener("click", decreaseGameTime)
   increaseTimeBtn.addEventListener("click", increaseGameTime)
-  startTimerBtn.addEventListener("click", startGame)
+  startStopBtn.addEventListener("click", toggleGame)
   hintBtn.addEventListener("click", toggleHints)
+  difficultySelect.addEventListener("change", changeDifficulty)
+  extendTimeBtn.addEventListener("click", extendTime)
+  acceptFateBtn.addEventListener("click", acceptFate)
 
   // Touch/mouse event handlers
   numberGrid.addEventListener("mousedown", handleStartSelection)
@@ -228,74 +189,149 @@ document.addEventListener("DOMContentLoaded", () => {
     updateTimerDisplay()
 
     // Reset UI elements
-    startTimerBtn.textContent = "Start Game"
-    startTimerBtn.disabled = false
+    updateStartStopButton()
     decreaseTimeBtn.disabled = false
     increaseTimeBtn.disabled = false
     hintBtn.innerHTML = '<i class="fas fa-lightbulb"></i> Hint'
     numberGrid.classList.remove("game-over")
     timerMinutesElement.classList.remove("timer-warning")
     timerSecondsElement.classList.remove("timer-warning")
+    gameOverOverlay.classList.remove("show")
 
     // Enable/disable grid interaction based on game state
-    const cells = document.querySelectorAll(".cell")
-    cells.forEach((cell) => {
-      cell.style.pointerEvents = gameState.isGameRunning ? "auto" : "none"
-      cell.style.opacity = gameState.isGameRunning ? "1" : "0.7"
-    })
+    updateGridInteraction()
 
     showMessage("Set your time and click Start Game!", "success")
   }
 
-  function switchToNextGrid() {
-    // Increment grid index and wrap around if needed
-    currentGridIndex = (currentGridIndex + 1) % sampleGrids.length
+  function changeDifficulty() {
+    const selectedDifficulty = difficultySelect.value
 
-    // Reset and initialize with new grid
-    resetGame()
-    initGame()
+    // Redirect to appropriate HTML file based on difficulty
+    switch (selectedDifficulty) {
+      case "easy":
+        window.location.href = "easy.html"
+        break
+      case "medium":
+        window.location.href = "medium.html"
+        break
+      case "hard":
+        window.location.href = "hard.html"
+        break
+      case "expert":
+        window.location.href = "expert.html"
+        break
+      case "numbers":
+      default:
+        // Stay on current page for numbers
+        gameState.currentDifficulty = "numbers"
+        gameState.currentPuzzleIndex = 0
 
-    showMessage("New grid generated!", "success")
+        // Stop game if running
+        if (gameState.isGameRunning) {
+          stopGame()
+        }
+
+        initGame()
+        showMessage("Switched to Numbers difficulty!", "success")
+        break
+    }
   }
 
-  function resetGame() {
-    // Clear any existing timer
-    if (gameState.timerInterval) {
-      clearInterval(gameState.timerInterval)
+  function switchToNextGrid() {
+    // Show loading animation
+    numberGrid.classList.add("loading")
+
+    // Disable the button temporarily
+    newGridBtn.disabled = true
+    newGridBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading...'
+
+    // Stop game if running but don't clear timer interval yet
+    const wasRunning = gameState.isGameRunning
+    if (gameState.isGameRunning) {
+      gameState.isGameRunning = false
+      updateStartStopButton()
+      updateGridInteraction()
+      clearAllSelections()
+      gameState.isSelecting = false
     }
 
-    // Reset game state
-    gameState.foundNumbers = []
-    gameState.currentScore = 0
-    gameState.selectedCells = []
-    gameState.isSelecting = false
-    gameState.currentDirection = null
-    gameState.gameTime = 180 // Reset to 3 minutes
-    gameState.timerInterval = null
-    gameState.isGameRunning = false
-    gameState.hintsShown = false
-    gameState.numberPositions = {}
-    gameState.activeSelections = {}
-    gameState.colorIndex = 1
+    // Clear timer interval
+    if (gameState.timerInterval) {
+      clearInterval(gameState.timerInterval)
+      gameState.timerInterval = null
+    }
 
-    // Reset UI
-    startTimerBtn.textContent = "Start Game"
-    numberGrid.classList.remove("game-over")
-    timerMinutesElement.classList.remove("timer-warning")
-    timerSecondsElement.classList.remove("timer-warning")
+    setTimeout(() => {
+      // Get current puzzles for the difficulty
+      const currentPuzzles = puzzleData[gameState.currentDifficulty]
+      if (currentPuzzles && currentPuzzles.length > 1) {
+        gameState.currentPuzzleIndex = (gameState.currentPuzzleIndex + 1) % currentPuzzles.length
+      }
+
+      // Reset game state for new grid
+      gameState.foundNumbers = []
+      gameState.currentScore = 0
+      gameState.selectedCells = []
+      gameState.isSelecting = false
+      gameState.currentDirection = null
+      gameState.hintsShown = false
+      gameState.numberPositions = {}
+      gameState.activeSelections = {}
+      gameState.colorIndex = 1
+
+      // Reset timer to original time
+      gameState.gameTime = gameState.originalGameTime
+
+      // Generate new grid and targets
+      generateGrid()
+      generateTargetNumbers()
+
+      // Update UI
+      updateScore()
+      renderTargetNumbers()
+      updateTimerDisplay()
+
+      // Reset UI elements
+      hintBtn.innerHTML = '<i class="fas fa-lightbulb"></i> Hint'
+      numberGrid.classList.remove("game-over", "loading")
+      timerMinutesElement.classList.remove("timer-warning")
+      timerSecondsElement.classList.remove("timer-warning")
+      gameOverOverlay.classList.remove("show")
+
+      // Re-enable controls
+      decreaseTimeBtn.disabled = false
+      increaseTimeBtn.disabled = false
+      newGridBtn.disabled = false
+      newGridBtn.innerHTML = "New Grid"
+
+      // Update grid interaction
+      updateGridInteraction()
+
+      showMessage("New grid generated!", "success")
+    }, 500) // Small delay for loading animation
   }
 
   function generateGrid() {
-    // Use the current grid from the samples
-    gameState.grid = sampleGrids[currentGridIndex]
+    const currentPuzzles = puzzleData[gameState.currentDifficulty]
+    if (currentPuzzles && currentPuzzles[gameState.currentPuzzleIndex]) {
+      gameState.grid = currentPuzzles[gameState.currentPuzzleIndex].grid
+    } else {
+      // Fallback to first numbers puzzle
+      gameState.grid = puzzleData.numbers[0].grid
+    }
 
-    // Render the grid
     renderGrid()
   }
 
   function generateTargetNumbers() {
-    // Use the target numbers corresponding to the current grid
-    gameState.targetNumbers = sampleTargets[currentGridIndex]
+    const currentPuzzles = puzzleData[gameState.currentDifficulty]
+    if (currentPuzzles && currentPuzzles[gameState.currentPuzzleIndex]) {
+      gameState.targetNumbers = currentPuzzles[gameState.currentPuzzleIndex].words
+    } else {
+      // Fallback to first numbers puzzle
+      gameState.targetNumbers = puzzleData.numbers[0].words
+    }
 
     // Calculate max score (50 points per number)
     gameState.maxScore = gameState.targetNumbers.length * 50
@@ -343,8 +379,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 break
               }
 
-              // Check if character matches
-              if (gameState.grid[newRow][newCol] !== number[i]) {
+              // Check if character matches (case insensitive for letters)
+              const gridChar = gameState.grid[newRow][newCol].toString().toLowerCase()
+              const targetChar = number[i].toString().toLowerCase()
+
+              if (gridChar !== targetChar) {
                 found = false
                 break
               }
@@ -368,6 +407,10 @@ document.addEventListener("DOMContentLoaded", () => {
   function renderGrid() {
     numberGrid.innerHTML = ""
 
+    // Set grid columns based on grid width
+    const gridWidth = gameState.grid[0] ? gameState.grid[0].length : 10
+    numberGrid.style.gridTemplateColumns = `repeat(${gridWidth}, 1fr)`
+
     gameState.grid.forEach((row, rowIndex) => {
       row.forEach((cellValue, colIndex) => {
         const cell = document.createElement("div")
@@ -376,14 +419,18 @@ document.addEventListener("DOMContentLoaded", () => {
         cell.dataset.row = rowIndex
         cell.dataset.col = colIndex
 
-        // Disable interaction if game isn't running
-        if (!gameState.isGameRunning) {
-          cell.style.pointerEvents = "none"
-          cell.style.opacity = "0.7"
-        }
-
         numberGrid.appendChild(cell)
       })
+    })
+
+    updateGridInteraction()
+  }
+
+  function updateGridInteraction() {
+    const cells = document.querySelectorAll(".cell")
+    cells.forEach((cell) => {
+      cell.style.pointerEvents = gameState.isGameRunning ? "auto" : "none"
+      cell.style.opacity = gameState.isGameRunning ? "1" : "0.7"
     })
   }
 
@@ -438,14 +485,16 @@ document.addEventListener("DOMContentLoaded", () => {
     // Get the selected number sequence
     const selectedNumber = gameState.selectedCells.map((cell) => cell.textContent).join("")
 
-    // Check if it's a target number
-    if (gameState.targetNumbers.includes(selectedNumber)) {
+    // Check if it's a target number (case insensitive)
+    const targetNumber = gameState.targetNumbers.find((num) => num.toLowerCase() === selectedNumber.toLowerCase())
+
+    if (targetNumber) {
       // Mark as found if not already found
-      if (!gameState.foundNumbers.includes(selectedNumber)) {
-        const numberIndex = gameState.targetNumbers.indexOf(selectedNumber)
+      if (!gameState.foundNumbers.includes(targetNumber)) {
+        const numberIndex = gameState.targetNumbers.indexOf(targetNumber)
         const colorIndex = (numberIndex % 5) + 1
 
-        gameState.foundNumbers.push(selectedNumber)
+        gameState.foundNumbers.push(targetNumber)
         gameState.currentScore += 50
         updateScore()
 
@@ -459,7 +508,7 @@ document.addEventListener("DOMContentLoaded", () => {
         })
 
         // Store this selection
-        gameState.activeSelections[selectedNumber] = {
+        gameState.activeSelections[targetNumber] = {
           cells: [...gameState.selectedCells],
           colorIndex: colorIndex,
         }
@@ -468,7 +517,7 @@ document.addEventListener("DOMContentLoaded", () => {
         renderTargetNumbers()
 
         // Show success message
-        showMessage(`Found ${selectedNumber}! +50 points`, "success")
+        showMessage(`Found ${targetNumber}! +50 points`, "success")
 
         // Check if all numbers are found
         if (gameState.foundNumbers.length === gameState.targetNumbers.length) {
@@ -631,6 +680,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (gameState.isGameRunning) return
 
     gameState.gameTime = Math.max(60, gameState.gameTime - 30) // Minimum 1 minute
+    gameState.originalGameTime = gameState.gameTime
     updateTimerDisplay()
   }
 
@@ -638,6 +688,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (gameState.isGameRunning) return
 
     gameState.gameTime = Math.min(600, gameState.gameTime + 30) // Maximum 10 minutes
+    gameState.originalGameTime = gameState.gameTime
     updateTimerDisplay()
   }
 
@@ -649,25 +700,59 @@ document.addEventListener("DOMContentLoaded", () => {
     timerSecondsElement.textContent = seconds.toString().padStart(2, "0")
   }
 
+  function toggleGame() {
+    if (gameState.isGameRunning) {
+      stopGame()
+    } else {
+      startGame()
+    }
+  }
+
   function startGame() {
     if (gameState.isGameRunning) return
 
     gameState.isGameRunning = true
-    startTimerBtn.textContent = "Game Running..."
-    startTimerBtn.disabled = true
+    updateStartStopButton()
     decreaseTimeBtn.disabled = true
     increaseTimeBtn.disabled = true
 
     // Enable grid interaction
-    const cells = document.querySelectorAll(".cell")
-    cells.forEach((cell) => {
-      cell.style.pointerEvents = "auto"
-      cell.style.opacity = "1"
-    })
+    updateGridInteraction()
 
     // Start timer
     gameState.timerInterval = setInterval(updateTimer, 1000)
     showMessage("Game started! Find the numbers!", "success")
+  }
+
+  function stopGame() {
+    if (!gameState.isGameRunning) return
+
+    gameState.isGameRunning = false
+    clearInterval(gameState.timerInterval)
+    gameState.timerInterval = null
+
+    updateStartStopButton()
+    decreaseTimeBtn.disabled = false
+    increaseTimeBtn.disabled = false
+
+    // Disable grid interaction
+    updateGridInteraction()
+
+    // Clear any active selections
+    clearAllSelections()
+    gameState.isSelecting = false
+
+    showMessage("Game stopped!", "success")
+  }
+
+  function updateStartStopButton() {
+    if (gameState.isGameRunning) {
+      startStopBtn.innerHTML = '<i class="fas fa-stop"></i> Stop Game'
+      startStopBtn.className = "game-btn stop-btn"
+    } else {
+      startStopBtn.innerHTML = '<i class="fas fa-play"></i> Start Game'
+      startStopBtn.className = "game-btn start-btn"
+    }
   }
 
   function updateTimer() {
@@ -691,19 +776,58 @@ document.addEventListener("DOMContentLoaded", () => {
     gameState.isGameRunning = false
     numberGrid.classList.add("game-over")
 
+    // Update button state
+    updateStartStopButton()
+    decreaseTimeBtn.disabled = false
+    increaseTimeBtn.disabled = false
+
     // Disable grid interaction
-    const cells = document.querySelectorAll(".cell")
-    cells.forEach((cell) => {
-      cell.style.pointerEvents = "none"
-    })
+    updateGridInteraction()
 
     if (isWin) {
-      showMessage(`Congratulations! You found all numbers in ${formatTime(180 - gameState.gameTime)}!`, "success")
+      showMessage(
+        `Congratulations! You found all numbers in ${formatTime(gameState.originalGameTime - gameState.gameTime)}!`,
+        "success",
+      )
     } else {
-      const foundCount = gameState.foundNumbers.length
-      const totalCount = gameState.targetNumbers.length
-      showMessage(`Time's up! You found ${foundCount} of ${totalCount} numbers.`, "success")
+      // Show game over overlay
+      showGameOverOverlay()
     }
+  }
+
+  function showGameOverOverlay() {
+    const foundCount = gameState.foundNumbers.length
+    const totalCount = gameState.targetNumbers.length
+
+    foundCountElement.textContent = foundCount
+    totalCountElement.textContent = totalCount
+
+    gameOverOverlay.classList.add("show")
+  }
+
+  function extendTime() {
+    gameState.gameTime += 60 // Add 1 minute
+    gameState.originalGameTime += 60
+    gameOverOverlay.classList.remove("show")
+
+    // Restart the game
+    gameState.isGameRunning = true
+    updateStartStopButton()
+    updateGridInteraction()
+    numberGrid.classList.remove("game-over")
+    timerMinutesElement.classList.remove("timer-warning")
+    timerSecondsElement.classList.remove("timer-warning")
+
+    // Start timer again
+    gameState.timerInterval = setInterval(updateTimer, 1000)
+    showMessage("Time extended! Keep searching!", "success")
+  }
+
+  function acceptFate() {
+    gameOverOverlay.classList.remove("show")
+    const foundCount = gameState.foundNumbers.length
+    const totalCount = gameState.targetNumbers.length
+    showMessage(`Game over! You found ${foundCount} of ${totalCount} numbers.`, "success")
   }
 
   function formatTime(seconds) {

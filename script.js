@@ -1,201 +1,278 @@
 // DOM Elements
-document.addEventListener('DOMContentLoaded', function() {
-    // Initialize enhanced animations
-    createEnhancedFloatingLetters();
-    createFloatingParticles();
-    createWordBubbles();
-    
-    // Initialize audio
-    const backgroundMusic = document.getElementById('background-music');
-    
-    // Play background music when user interacts with the page
-    document.addEventListener('click', function() {
-        if (backgroundMusic.paused) {
-            backgroundMusic.volume = 0.3;
-            backgroundMusic.play().catch(error => {
-                console.log('Auto-play prevented:', error);
-            });
-        }
-    }, { once: true });
-    
-    // Load high score from localStorage
-    const highScore = localStorage.getItem('wordSearchHighScore') || 0;
-    document.getElementById('high-score').textContent = highScore;
-    
-    // Add interactive effects to buttons
-    addButtonEffects();
-    
-    // Add mouse trail effect
-    addMouseTrail();
-});
+document.addEventListener("DOMContentLoaded", () => {
+  initializeApp()
+})
 
-// Create enhanced floating letters animation
-function createEnhancedFloatingLetters() {
-    const container = document.querySelector('.floating-letters');
-    const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    const numLetters = 30;
-    
-    for (let i = 0; i < numLetters; i++) {
-        const letter = document.createElement('div');
-        letter.classList.add('floating-letter');
-        
-        // Add glow effect to some letters
-        if (Math.random() > 0.7) {
-            letter.classList.add('glow');
-        }
-        
-        letter.textContent = letters[Math.floor(Math.random() * letters.length)];
-        
-        // Random position
-        letter.style.left = `${Math.random() * 100}%`;
-        
-        // Random delay
-        letter.style.animationDelay = `${Math.random() * 20}s`;
-        
-        // Random duration
-        letter.style.animationDuration = `${15 + Math.random() * 15}s`;
-        
-        // Random size
-        letter.style.fontSize = `${1.5 + Math.random() * 2}rem`;
-        
-        container.appendChild(letter);
+function initializeApp() {
+  // Load high score
+  loadHighScore()
+
+  // Create floating letters
+  createFloatingLetters()
+
+  // Add card animations
+  animateCards()
+
+  // Add interactive effects
+  addInteractiveEffects()
+
+  // Add keyboard navigation
+  addKeyboardNavigation()
+}
+
+// Load and display high score from localStorage
+function loadHighScore() {
+  const highScore = localStorage.getItem("wordSearchHighScore") || 0
+  const highScoreElement = document.getElementById("highScore")
+  if (highScoreElement) {
+    // Animate the score counting up
+    animateNumber(highScoreElement, 0, Number.parseInt(highScore), 1000)
+  }
+}
+
+// Animate number counting up
+function animateNumber(element, start, end, duration) {
+  const startTime = performance.now()
+
+  function updateNumber(currentTime) {
+    const elapsed = currentTime - startTime
+    const progress = Math.min(elapsed / duration, 1)
+
+    // Easing function for smooth animation
+    const easeOut = 1 - Math.pow(1 - progress, 3)
+    const current = Math.floor(start + (end - start) * easeOut)
+
+    element.textContent = current.toLocaleString()
+
+    if (progress < 1) {
+      requestAnimationFrame(updateNumber)
     }
+  }
+
+  requestAnimationFrame(updateNumber)
 }
 
-// Create floating particles
-function createFloatingParticles() {
-    const container = document.querySelector('.floating-particles');
-    const numParticles = 25;
-    
-    for (let i = 0; i < numParticles; i++) {
-        const particle = document.createElement('div');
-        particle.classList.add('particle');
-        
-        // Random position
-        particle.style.left = `${Math.random() * 100}%`;
-        
-        // Random delay
-        particle.style.animationDelay = `${Math.random() * 15}s`;
-        
-        // Random duration
-        particle.style.animationDuration = `${10 + Math.random() * 10}s`;
-        
-        // Random size
-        const size = 2 + Math.random() * 4;
-        particle.style.width = `${size}px`;
-        particle.style.height = `${size}px`;
-        
-        container.appendChild(particle);
+// Create floating letters animation
+function createFloatingLetters() {
+  const container = document.getElementById("floatingLetters")
+  if (!container) return
+
+  const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+  const numberOfLetters = window.innerWidth < 768 ? 8 : 15
+
+  // Clear existing letters
+  container.innerHTML = ""
+
+  for (let i = 0; i < numberOfLetters; i++) {
+    createFloatingLetter(container, letters)
+  }
+
+  // Create new letters periodically
+  setInterval(() => {
+    if (container.children.length < numberOfLetters) {
+      createFloatingLetter(container, letters)
     }
+  }, 2000)
 }
 
-// Create word bubbles
-function createWordBubbles() {
-    const container = document.querySelector('.word-bubbles');
-    const words = [
-        'SEARCH', 'FIND', 'WORD', 'PUZZLE', 'GAME', 'FUN', 'PLAY', 'SOLVE',
-        'LETTERS', 'GRID', 'CHALLENGE', 'BRAIN', 'THINK', 'DISCOVER'
-    ];
-    const numBubbles = 6;
-    
-    for (let i = 0; i < numBubbles; i++) {
-        const bubble = document.createElement('div');
-        bubble.classList.add('word-bubble');
-        bubble.textContent = words[Math.floor(Math.random() * words.length)];
-        
-        // Random position
-        bubble.style.left = `${Math.random() * 80}%`;
-        
-        // Random delay
-        bubble.style.animationDelay = `${Math.random() * 25}s`;
-        
-        // Random duration
-        bubble.style.animationDuration = `${20 + Math.random() * 15}s`;
-        
-        container.appendChild(bubble);
+function createFloatingLetter(container, letters) {
+  const letter = document.createElement("div")
+  letter.className = "floating-letter"
+  letter.textContent = letters[Math.floor(Math.random() * letters.length)]
+
+  // Random horizontal position
+  letter.style.left = Math.random() * 100 + "%"
+
+  // Random animation delay
+  letter.style.animationDelay = Math.random() * 5 + "s"
+
+  // Random animation duration
+  letter.style.animationDuration = 10 + Math.random() * 10 + "s"
+
+  container.appendChild(letter)
+
+  // Remove letter after animation completes
+  setTimeout(() => {
+    if (letter.parentNode) {
+      letter.parentNode.removeChild(letter)
     }
+  }, 15000)
 }
 
-// Add interactive button effects
-function addButtonEffects() {
-    const buttons = document.querySelectorAll('.level-btn');
-    
-    buttons.forEach(button => {
-        // Add ripple effect on click
-        button.addEventListener('click', function(e) {
-            const ripple = document.createElement('div');
-            ripple.style.position = 'absolute';
-            ripple.style.borderRadius = '50%';
-            ripple.style.background = 'rgba(255, 255, 255, 0.6)';
-            ripple.style.transform = 'scale(0)';
-            ripple.style.animation = 'ripple 0.6s linear';
-            ripple.style.left = (e.clientX - button.offsetLeft) + 'px';
-            ripple.style.top = (e.clientY - button.offsetTop) + 'px';
-            ripple.style.width = ripple.style.height = '20px';
-            ripple.style.marginLeft = ripple.style.marginTop = '-10px';
-            
-            button.appendChild(ripple);
-            
-            setTimeout(() => {
-                ripple.remove();
-            }, 600);
-        });
-        
-        // Add hover sound effect (if you have audio files)
-        button.addEventListener('mouseenter', function() {
-            // You can add a hover sound effect here
-            this.style.transform = 'translateY(-5px) scale(1.02)';
-        });
-        
-        button.addEventListener('mouseleave', function() {
-            this.style.transform = 'translateY(0) scale(1)';
-        });
-    });
-    
-    // Add CSS for ripple animation
-    const style = document.createElement('style');
-    style.textContent = `
-        @keyframes ripple {
-            to {
-                transform: scale(4);
-                opacity: 0;
-            }
+// Animate cards on scroll/load
+function animateCards() {
+  const cards = document.querySelectorAll(".difficulty-card")
+
+  // Add loading class for initial animation
+  cards.forEach((card, index) => {
+    card.style.animationDelay = index * 0.1 + "s"
+    card.classList.add("loading")
+  })
+
+  // Intersection Observer for scroll animations
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = "1"
+          entry.target.style.transform = "translateY(0)"
         }
-    `;
-    document.head.appendChild(style);
+      })
+    },
+    {
+      threshold: 0.1,
+      rootMargin: "0px 0px -50px 0px",
+    },
+  )
+
+  cards.forEach((card) => observer.observe(card))
 }
 
-// Add mouse trail effect
-function addMouseTrail() {
-    const trail = [];
-    const trailLength = 8;
-    
-    document.addEventListener('mousemove', function(e) {
-        // Create trail dot
-        const dot = document.createElement('div');
-        dot.style.position = 'fixed';
-        dot.style.left = e.clientX + 'px';
-        dot.style.top = e.clientY + 'px';
-        dot.style.width = '6px';
-        dot.style.height = '6px';
-        dot.style.background = 'rgba(255, 255, 255, 0.6)';
-        dot.style.borderRadius = '50%';
-        dot.style.pointerEvents = 'none';
-        dot.style.zIndex = '1000';
-        dot.style.transition = 'opacity 0.5s ease-out';
-        
-        document.body.appendChild(dot);
-        trail.push(dot);
-        
-        // Remove old trail dots
-        if (trail.length > trailLength) {
-            const oldDot = trail.shift();
-            oldDot.style.opacity = '0';
-            setTimeout(() => {
-                if (oldDot.parentNode) {
-                    oldDot.parentNode.removeChild(oldDot);
-                }
-            }, 500);
+// Add interactive effects to cards
+function addInteractiveEffects() {
+  const cards = document.querySelectorAll(".difficulty-card")
+
+  cards.forEach((card) => {
+    // Add ripple effect on click
+    card.addEventListener("click", function (e) {
+      createRippleEffect(e, this)
+    })
+
+    // Add tilt effect on mouse move
+    card.addEventListener("mousemove", function (e) {
+      if (window.innerWidth > 768) {
+        // Only on desktop
+        addTiltEffect(e, this)
+      }
+    })
+
+    // Reset tilt on mouse leave
+    card.addEventListener("mouseleave", function () {
+      this.style.transform = ""
+    })
+
+    // Add sound feedback (if you want to add audio later)
+    card.addEventListener("mouseenter", function () {
+      // Placeholder for hover sound
+      this.style.transition = "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)"
+    })
+  })
+}
+
+// Create ripple effect on click
+function createRippleEffect(event, element) {
+  const ripple = document.createElement("div")
+  const rect = element.getBoundingClientRect()
+  const size = Math.max(rect.width, rect.height)
+  const x = event.clientX - rect.left - size / 2
+  const y = event.clientY - rect.top - size / 2
+
+  ripple.style.cssText = `
+        position: absolute;
+        width: ${size}px;
+        height: ${size}px;
+        left: ${x}px;
+        top: ${y}px;
+        background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%);
+        border-radius: 50%;
+        transform: scale(0);
+        animation: ripple 0.6s ease-out;
+        pointer-events: none;
+        z-index: 1;
+    `
+
+  element.style.position = "relative"
+  element.appendChild(ripple)
+
+  // Remove ripple after animation
+  setTimeout(() => {
+    if (ripple.parentNode) {
+      ripple.parentNode.removeChild(ripple)
+    }
+  }, 600)
+}
+
+// Add tilt effect based on mouse position
+function addTiltEffect(event, element) {
+  const rect = element.getBoundingClientRect()
+  const centerX = rect.left + rect.width / 2
+  const centerY = rect.top + rect.height / 2
+  const deltaX = (event.clientX - centerX) / (rect.width / 2)
+  const deltaY = (event.clientY - centerY) / (rect.height / 2)
+
+  const tiltX = deltaY * 10 // Max 10 degrees
+  const tiltY = deltaX * -10 // Max 10 degrees
+
+  element.style.transform = `perspective(1000px) rotateX(${tiltX}deg) rotateY(${tiltY}deg) translateY(-8px)`
+}
+
+// Add keyboard navigation
+function addKeyboardNavigation() {
+  const cards = document.querySelectorAll(".difficulty-card")
+
+  document.addEventListener("keydown", (e) => {
+    const focusedElement = document.activeElement
+    const currentIndex = Array.from(cards).indexOf(focusedElement)
+
+    switch (e.key) {
+      case "ArrowDown":
+      case "ArrowRight":
+        e.preventDefault()
+        const nextIndex = (currentIndex + 1) % cards.length
+        cards[nextIndex].focus()
+        break
+
+      case "ArrowUp":
+      case "ArrowLeft":
+        e.preventDefault()
+        const prevIndex = currentIndex === 0 ? cards.length - 1 : currentIndex - 1
+        cards[prevIndex].focus()
+        break
+
+      case "Enter":
+      case " ":
+        if (cards.includes(focusedElement)) {
+          e.preventDefault()
+          focusedElement.click()
         }
-    });
+        break
+    }
+  })
+}
+
+// Add CSS for ripple animation
+const style = document.createElement("style")
+style.textContent = `
+    @keyframes ripple {
+        to {
+            transform: scale(2);
+            opacity: 0;
+        }
+    }
+`
+document.head.appendChild(style)
+
+// Handle window resize
+window.addEventListener("resize", () => {
+  // Recreate floating letters with appropriate count for screen size
+  createFloatingLetters()
+})
+
+// Performance optimization: Reduce animations on low-end devices
+if (navigator.hardwareConcurrency && navigator.hardwareConcurrency < 4) {
+  document.documentElement.style.setProperty("--transition", "all 0.2s ease")
+}
+
+// Add service worker for offline functionality (optional)
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker
+      .register("/sw.js")
+      .then((registration) => {
+        console.log("ServiceWorker registration successful")
+      })
+      .catch((err) => {
+        console.log("ServiceWorker registration failed")
+      })
+  })
 }
