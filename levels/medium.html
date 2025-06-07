@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word Search - Medium Level</title>
+    <link rel="stylesheet" href="../style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="game-container">
+        <header>
+            <div class="logo">
+                <div class="bars-icon" onclick="window.location.href='../index.html'">
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                </div>
+                <div class="title">
+                    <span class="letter-box">W</span>
+                    <span class="letter-box">O</span>
+                    <span class="letter-box">R</span>
+                    <span class="letter-box">D</span>
+                    <span class="title-text">SEARCH</span>
+                </div>
+                <div class="menu-icon">
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                </div>
+            </div>
+        </header>
+
+        <main>
+            <div class="grid-container">
+                <div id="word-grid" class="word-grid">
+                    <!-- Grid will be dynamically generated -->
+                </div>
+                
+                <div id="hint-container" class="hint-container">
+                    <!-- Hints will be dynamically generated -->
+                </div>
+                
+                <div id="word-list" class="word-list">
+                    <!-- Words will be dynamically generated -->
+                </div>
+            </div>
+        </main>
+
+        <div class="score-container">
+            <div class="current-score">Score: <span id="current-score">0</span></div>
+            <div class="high-score">High Score: <span id="high-score">0</span></div>
+        </div>
+
+        <div id="completion-modal" class="modal">
+            <div class="modal-content">
+                <h2 class="modal-title">Level Complete!</h2>
+                <p class="modal-score">Your score: <span id="final-score">0</span></p>
+                <div class="modal-buttons">
+                    <button class="modal-btn primary" onclick="window.location.reload()">Play Again</button>
+                    <button class="modal-btn secondary" onclick="window.location.href='../index.html'">Home</button>
+                </div>
+            </div>
+        </div>
+
+        <audio id="background-music" loop>
+            <source src="../assets/sounds/game-music.mp3" type="audio/mp3">
+        </audio>
+        <audio id="word-found-sound">
+            <source src="../assets/sounds/word-found.mp3" type="audio/mp3">
+        </audio>
+        <audio id="level-complete-sound">
+            <source src="../assets/sounds/level-complete.mp3" type="audio/mp3">
+        </audio>
+    </div>
+
+    <script src="../data/fallbackPuzzles.json"></script>
+    <script src="../levels/level-script.js"></script>
+    <script>
+        // Initialize the medium level
+        initializeLevel('medium');
+    </script>
+</body>
+</html>

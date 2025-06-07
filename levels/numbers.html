@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Number Search Game</title>
+    <link rel="stylesheet" href="numbers.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="game-container">
+        <div class="board-container">
+            <div class="grid" id="numberGrid"></div>
+        </div>
+        <div class="controls-container">
+            <h1>Number Search</h1>
+            
+            <div class="timer-container">
+                <div class="timer-controls">
+                    <button id="decreaseTime" class="time-btn"><i class="fas fa-minus"></i></button>
+                    <div class="timer-display">
+                        <span id="timerMinutes">3</span>:<span id="timerSeconds">00</span>
+                    </div>
+                    <button id="increaseTime" class="time-btn"><i class="fas fa-plus"></i></button>
+                </div>
+                <button id="startTimer" class="game-btn">Start Game</button>
+            </div>
+            
+            <div class="score-container">
+                <div class="score-box">
+                    <span class="score-label">Current Score:</span>
+                    <span class="score-value" id="currentScore">0</span>
+                </div>
+                <div class="score-box">
+                    <span class="score-label">Max Score:</span>
+                    <span class="score-value" id="maxScore">0</span>
+                </div>
+            </div>
+            
+            <div class="target-container">
+                <div class="target-header">
+                    <h2>Numbers to Find:</h2>
+                    <button id="hintBtn" class="hint-btn" title="Show all hints">
+                        <i class="fas fa-lightbulb"></i> Hint
+                    </button>
+                </div>
+                <div class="target-numbers" id="targetNumbers"></div>
+            </div>
+            
+            <div class="buttons-container">
+                <button id="newGridBtn" class="game-btn">New Grid</button>
+                <button id="mainMenuBtn" class="game-btn">Main Menu</button>
+            </div>
+            
+            <div class="message" id="message"></div>
+        </div>
+    </div>
+    <script src="numbers.js"></script>
+</body>
+</html>

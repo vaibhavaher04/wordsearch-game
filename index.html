@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Word Search Game</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="game-container">
+        <!-- Animated Background -->
+        <div class="animated-background">
+            <div class="gradient-orb orb-1"></div>
+            <div class="gradient-orb orb-2"></div>
+            <div class="gradient-orb orb-3"></div>
+        </div>
+
+        <header>
+            <div class="logo">
+                <div class="bars-icon animated-bars">
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                </div>
+                <div class="title">
+                    <span class="letter-box animate-letter" style="animation-delay: 0.1s">W</span>
+                    <span class="letter-box animate-letter" style="animation-delay: 0.2s">O</span>
+                    <span class="letter-box animate-letter" style="animation-delay: 0.3s">R</span>
+                    <span class="letter-box animate-letter" style="animation-delay: 0.4s">D</span>
+                    <span class="title-text animate-title">SEARCH</span>
+                </div>
+                <div class="menu-icon animated-bars">
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                </div>
+            </div>
+        </header>
+
+        <main>
+            <div class="home-screen">
+                <!-- Game Name -->
+                <div class="game-name animate-fade-in">
+                    <h1 class="main-title">Simple Word Search</h1>
+                    <div class="title-underline"></div>
+                </div>
+
+                <h2 class="select-text animate-fade-in">Select Difficulty:</h2>
+                
+                <div class="level-buttons">
+                    <a href="levels/easy.html" class="level-btn animate-slide-up" style="animation-delay: 0.1s">
+                        <span class="btn-text">Easy</span>
+                        <div class="btn-glow"></div>
+                    </a>
+                    <a href="levels/medium.html" class="level-btn animate-slide-up" style="animation-delay: 0.2s">
+                        <span class="btn-text">Medium</span>
+                        <div class="btn-glow"></div>
+                    </a>
+                    <a href="levels/hard.html" class="level-btn animate-slide-up" style="animation-delay: 0.3s">
+                        <span class="btn-text">Hard</span>
+                        <div class="btn-glow"></div>
+                    </a>
+                    <a href="levels/expert.html" class="level-btn animate-slide-up" style="animation-delay: 0.4s">
+                        <span class="btn-text">Expert</span>
+                        <div class="btn-glow"></div>
+                    </a>
+                    <a href="levels/numbers.html" class="level-btn animate-slide-up" style="animation-delay: 0.5s">
+                        <span class="btn-text">Numbers</span>
+                        <div class="btn-glow"></div>
+                    </a>
+                </div>
+
+                <!-- Enhanced Floating Elements -->
+                <div class="floating-letters">
+                    <!-- Letters will be dynamically added with JavaScript -->
+                </div>
+                
+                <div class="floating-particles">
+                    <!-- Particles will be dynamically added with JavaScript -->
+                </div>
+
+                <div class="word-bubbles">
+                    <!-- Word bubbles will be dynamically added with JavaScript -->
+                </div>
+            </div>
+        </main>
+
+        <div class="score-container animate-fade-in">
+            <div class="high-score glow-text">
+                <span class="score-label">High Score:</span>
+                <span id="high-score" class="score-value">0</span>
+            </div>
+        </div>
+
+        <audio id="background-music" loop>
+            <source src="assets/sounds/background-music.mp3" type="audio/mp3">
+        </audio>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
