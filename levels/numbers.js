@@ -175,6 +175,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   })
 
+  // Add keyboard navigation for accessibility
+  document.addEventListener("keydown", handleKeyboardNavigation)
+
   function initGame() {
     // Clear any existing timer
     if (gameState.timerInterval) {
@@ -216,7 +219,41 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Enable/disable grid interaction based on game state
     updateGridInteraction()
 
+    // Add entrance animations
+    addEntranceAnimations()
+
     showMessage("Set your time and click Start Game!", "success")
+  }
+
+  function addEntranceAnimations() {
+    // Animate grid cells
+    const cells = document.querySelectorAll(".cell")
+    cells.forEach((cell, index) => {
+      cell.style.opacity = "0"
+      cell.style.transform = "scale(0.5)"
+
+      setTimeout(() => {
+        cell.style.transition = "opacity 0.3s ease, transform 0.3s ease"
+        cell.style.opacity = "1"
+        cell.style.transform = "scale(1)"
+      }, index * 5) // Staggered animation
+    })
+
+    // Animate target numbers
+    const targetNumbers = document.querySelectorAll(".target-number")
+    targetNumbers.forEach((number, index) => {
+      number.style.opacity = "0"
+      number.style.transform = "translateY(20px)"
+
+      setTimeout(
+        () => {
+          number.style.transition = "opacity 0.3s ease, transform 0.3s ease"
+          number.style.opacity = "1"
+          number.style.transform = "translateY(0)"
+        },
+        300 + index * 50,
+      ) // Staggered animation after grid
+    })
   }
 
   function changeDifficulty() {
@@ -318,13 +355,16 @@ document.addEventListener("DOMContentLoaded", async () => {
       decreaseTimeBtn.disabled = false
       increaseTimeBtn.disabled = false
       newGridBtn.disabled = false
-      newGridBtn.innerHTML = "New Grid"
+      newGridBtn.innerHTML = '<i class="fas fa-sync-alt"></i> New Grid'
 
       // Update grid interaction
       updateGridInteraction()
 
+      // Add entrance animations
+      addEntranceAnimations()
+
       showMessage("New grid generated!", "success")
-    }, 500) // Small delay for loading animation
+    }, 800) // Small delay for loading animation
   }
 
   function generateGrid() {
@@ -441,6 +481,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         cell.textContent = cellValue
         cell.dataset.row = rowIndex
         cell.dataset.col = colIndex
+        cell.tabIndex = 0 // Make cells focusable for keyboard navigation
+        cell.setAttribute("role", "button")
+        cell.setAttribute("aria-label", `Cell at row ${rowIndex + 1}, column ${colIndex + 1}, value ${cellValue}`)
 
         numberGrid.appendChild(cell)
       })
@@ -454,6 +497,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     cells.forEach((cell) => {
       cell.style.pointerEvents = gameState.isGameRunning ? "auto" : "none"
       cell.style.opacity = gameState.isGameRunning ? "1" : "0.7"
+
+      if (!gameState.isGameRunning) {
+        cell.setAttribute("aria-disabled", "true")
+      } else {
+        cell.removeAttribute("aria-disabled")
+      }
     })
   }
 
@@ -468,6 +517,14 @@ document.addEventListener("DOMContentLoaded", async () => {
       numberElement.textContent = number
       numberElement.dataset.number = number
       numberElement.dataset.colorIndex = (index % 5) + 1
+      numberElement.tabIndex = 0 // Make focusable
+      numberElement.setAttribute("role", "button")
+
+      if (gameState.foundNumbers.includes(number)) {
+        numberElement.setAttribute("aria-label", `Number ${number} found`)
+      } else {
+        numberElement.setAttribute("aria-label", `Find number ${number}`)
+      }
 
       // Add hint class for color coding if hints are shown
       if (gameState.hintsShown && !gameState.foundNumbers.includes(number)) {
@@ -497,6 +554,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // Add selection class
     cell.classList.add(`selected-${gameState.colorIndex}`)
+
+    // Add sound effect (if enabled)
+    playSound("select")
   }
 
   function handleEndSelection(e) {
@@ -539,6 +599,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         // Update target numbers display
         renderTargetNumbers()
 
+        // Play success sound
+        playSound("success")
+
         // Show success message
         showMessage(`Found ${targetNumber}! +50 points`, "success")
 
@@ -547,11 +610,13 @@ document.addEventListener("DOMContentLoaded", async () => {
           endGame(true)
         }
       } else {
+        playSound("error")
         showMessage("Already found this number!", "success")
         clearCurrentSelection()
       }
     } else if (gameState.selectedCells.length > 1) {
       // Not a target number - deselect
+      playSound("error")
       showMessage("Not a target number!", "success")
       clearCurrentSelection()
     } else {
@@ -624,7 +689,75 @@ document.addEventListener("DOMContentLoaded", async () => {
       }
 
       gameState.selectedCells.push(cell)
+
+      // Play soft sound for selection continuation
+      playSound("hover")
     }
+  }
+
+  function handleKeyboardNavigation(e) {
+    if (!gameState.isGameRunning) return
+
+    const focusedElement = document.activeElement
+
+    // Handle keyboard selection for grid cells
+    if (focusedElement && focusedElement.classList.contains("cell")) {
+      const row = Number.parseInt(focusedElement.dataset.row)
+      const col = Number.parseInt(focusedElement.dataset.col)
+
+      switch (e.key) {
+        case "Enter":
+        case " ":
+          // Toggle selection on Enter or Space
+          e.preventDefault()
+          if (!gameState.selectedCells.includes(focusedElement)) {
+            handleStartSelection({
+              preventDefault: () => {},
+              type: "keyboard",
+              target: focusedElement,
+            })
+          } else {
+            handleEndSelection({
+              preventDefault: () => {},
+              type: "keyboard",
+            })
+          }
+          break
+
+        case "ArrowUp":
+          e.preventDefault()
+          navigateGrid(row - 1, col)
+          break
+
+        case "ArrowDown":
+          e.preventDefault()
+          navigateGrid(row + 1, col)
+          break
+
+        case "ArrowLeft":
+          e.preventDefault()
+          navigateGrid(row, col - 1)
+          break
+
+        case "ArrowRight":
+          e.preventDefault()
+          navigateGrid(row, col + 1)
+          break
+      }
+    }
+  }
+
+  function navigateGrid(row, col) {
+    const cell = document.querySelector(`.cell[data-row="${row}"][data-col="${col}"]`)
+    if (cell) {
+      cell.focus()
+    }
+  }
+
+  function playSound(type) {
+    // Placeholder for sound effects
+    // You can implement actual sound effects here
+    console.log(`Playing ${type} sound`)
   }
 
   function getDirectionType(rowDiff, colDiff) {
@@ -666,6 +799,10 @@ document.addEventListener("DOMContentLoaded", async () => {
   function getCellFromEvent(e) {
     let clientX, clientY
 
+    if (e.type === "keyboard") {
+      return e.target
+    }
+
     if (e.type.includes("touch")) {
       if (e.touches && e.touches.length > 0) {
         clientX = e.touches[0].clientX
@@ -687,6 +824,12 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   function updateScore() {
     currentScoreElement.textContent = gameState.currentScore
+
+    // Add animation to score update
+    currentScoreElement.style.transform = "scale(1.2)"
+    setTimeout(() => {
+      currentScoreElement.style.transform = "scale(1)"
+    }, 200)
   }
 
   function showMessage(text, type) {
@@ -696,7 +839,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     setTimeout(() => {
       messageElement.classList.remove("show")
-    }, 2000)
+    }, 3000)
   }
 
   function decreaseGameTime() {
@@ -745,6 +888,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Start timer
     gameState.timerInterval = setInterval(updateTimer, 1000)
     showMessage("Game started! Find the numbers!", "success")
+
+    // Play start sound
+    playSound("start")
   }
 
   function stopGame() {
@@ -808,11 +954,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     updateGridInteraction()
 
     if (isWin) {
+      playSound("win")
       showMessage(
         `Congratulations! You found all numbers in ${formatTime(gameState.originalGameTime - gameState.gameTime)}!`,
         "success",
       )
     } else {
+      playSound("lose")
       // Show game over overlay
       showGameOverOverlay()
     }
@@ -844,6 +992,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Start timer again
     gameState.timerInterval = setInterval(updateTimer, 1000)
     showMessage("Time extended! Keep searching!", "success")
+
+    playSound("extend")
   }
 
   function acceptFate() {

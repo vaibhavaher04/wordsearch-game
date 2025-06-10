@@ -3,82 +3,123 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Word Search - Medium Level</title>
-    <link rel="stylesheet" href="../style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <title>Word Search Game - Medium</title>
+    <link rel="stylesheet" href="medium.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
     <div class="game-container">
-        <header>
+        <!-- Background Elements -->
+        <div class="background-shapes">
+            <div class="shape shape-1"></div>
+            <div class="shape shape-2"></div>
+            <div class="shape shape-3"></div>
+        </div>
+
+        <header class="game-header">
             <div class="logo">
-                <div class="bars-icon" onclick="window.location.href='../index.html'">
-                    <div class="bar"></div>
-                    <div class="bar"></div>
-                    <div class="bar"></div>
+                <div class="logo-icon">
+                    <i class="fas fa-fire"></i>
                 </div>
-                <div class="title">
-                    <span class="letter-box">W</span>
-                    <span class="letter-box">O</span>
-                    <span class="letter-box">R</span>
-                    <span class="letter-box">D</span>
-                    <span class="title-text">SEARCH</span>
-                </div>
-                <div class="menu-icon">
-                    <div class="bar"></div>
-                    <div class="bar"></div>
-                    <div class="bar"></div>
-                </div>
+                <h1 class="logo-text">Medium Word Search</h1>
+            </div>
+            <div class="difficulty-selector">
+                <select id="difficultySelect" class="difficulty-select">
+                    <option value="easy">Easy</option>
+                    <option value="medium" selected>Medium</option>
+                    <option value="hard">Hard</option>
+                    <option value="expert">Expert</option>
+                    <option value="numbers">Numbers</option>
+                </select>
             </div>
         </header>
 
-        <main>
-            <div class="grid-container">
-                <div id="word-grid" class="word-grid">
-                    <!-- Grid will be dynamically generated -->
+        <main class="game-main">
+            <div class="board-container">
+                <div class="grid-wrapper">
+                    <div class="grid" id="wordGrid"></div>
                 </div>
                 
-                <div id="hint-container" class="hint-container">
-                    <!-- Hints will be dynamically generated -->
+                <!-- Game Over Overlay -->
+                <div class="game-over-overlay" id="gameOverOverlay">
+                    <div class="game-over-content">
+                        <div class="game-over-icon">
+                            <i class="fas fa-hourglass-end"></i>
+                        </div>
+                        <h2 class="game-over-title">Time's Up!</h2>
+                        <p class="game-over-message" id="gameOverMessage">
+                            You found <span id="foundCount">0</span> of <span id="totalCount">0</span> words.
+                        </p>
+                        <div class="game-over-buttons">
+                            <button id="extendTimeBtn" class="game-over-btn extend-btn">
+                                <i class="fas fa-clock"></i>
+                                Extend Time
+                            </button>
+                            <button id="acceptFateBtn" class="game-over-btn accept-btn">
+                                <i class="fas fa-flag"></i>
+                                Accept Fate
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="controls-container">
+                <div class="game-stats">
+                    <div class="score-container">
+                        <div class="score-box">
+                            <span class="score-label">Score</span>
+                            <span class="score-value" id="currentScore">0</span>
+                        </div>
+                        <div class="score-box">
+                            <span class="score-label">Max</span>
+                            <span class="score-value" id="maxScore">0</span>
+                        </div>
+                    </div>
+                    
+                    <div class="timer-container">
+                        <div class="timer-controls">
+                            <button id="decreaseTime" class="time-btn" aria-label="Decrease time">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                            <div class="timer-display">
+                                <span id="timerMinutes">8</span>:<span id="timerSeconds">00</span>
+                            </div>
+                            <button id="increaseTime" class="time-btn" aria-label="Increase time">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
+                        <button id="startStopBtn" class="game-btn start-btn">
+                            <i class="fas fa-play"></i>
+                            Start Game
+                        </button>
+                    </div>
                 </div>
                 
-                <div id="word-list" class="word-list">
-                    <!-- Words will be dynamically generated -->
+                <div class="target-container">
+                    <div class="target-header">
+                        <h2>Words to Find</h2>
+                        <button id="hintBtn" class="hint-btn" title="Show all hints">
+                            <i class="fas fa-lightbulb"></i> Hint
+                        </button>
+                    </div>
+                    <div class="target-words" id="targetWords"></div>
                 </div>
+                
+                <div class="buttons-container">
+                    <button id="newGridBtn" class="game-btn">
+                        <i class="fas fa-sync-alt"></i> New Grid
+                    </button>
+                    <button id="mainMenuBtn" class="game-btn">
+                        <i class="fas fa-home"></i> Main Menu
+                    </button>
+                </div>
+                
+                <div class="message" id="message"></div>
             </div>
         </main>
-
-        <div class="score-container">
-            <div class="current-score">Score: <span id="current-score">0</span></div>
-            <div class="high-score">High Score: <span id="high-score">0</span></div>
-        </div>
-
-        <div id="completion-modal" class="modal">
-            <div class="modal-content">
-                <h2 class="modal-title">Level Complete!</h2>
-                <p class="modal-score">Your score: <span id="final-score">0</span></p>
-                <div class="modal-buttons">
-                    <button class="modal-btn primary" onclick="window.location.reload()">Play Again</button>
-                    <button class="modal-btn secondary" onclick="window.location.href='../index.html'">Home</button>
-                </div>
-            </div>
-        </div>
-
-        <audio id="background-music" loop>
-            <source src="../assets/sounds/game-music.mp3" type="audio/mp3">
-        </audio>
-        <audio id="word-found-sound">
-            <source src="../assets/sounds/word-found.mp3" type="audio/mp3">
-        </audio>
-        <audio id="level-complete-sound">
-            <source src="../assets/sounds/level-complete.mp3" type="audio/mp3">
-        </audio>
     </div>
-
-    <script src="../data/fallbackPuzzles.json"></script>
-    <script src="../levels/level-script.js"></script>
-    <script>
-        // Initialize the medium level
-        initializeLevel('medium');
-    </script>
+    <script src="medium.js"></script>
 </body>
 </html>
