@@ -161,6 +161,25 @@ body {
   transition: var(--transition-normal);
   backdrop-filter: blur(5px);
   border: 1px solid rgba(255, 255, 255, 0.3);
+  min-width: 120px;  /* Added this line */
+}
+
+/* Style the dropdown options */
+.difficulty-select option {
+  background-color: white;
+  color: var(--text-primary);
+  padding: 0.5rem;
+  font-weight: 500;
+}
+
+.difficulty-select option:hover {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.difficulty-select option:checked {
+  background-color: var(--primary-color);
+  color: white;
 }
 
 .difficulty-select:focus {
