@@ -4,42 +4,51 @@ document.addEventListener("DOMContentLoaded", async () => {
     easy: [
       {
         grid: [
-          ["C", "A", "T", "S", "D", "O", "G", "S"],
-          ["O", "A", "E", "A", "R", "T", "H", "U"],
-          ["W", "A", "R", "E", "R", "F", "I", "N"],
-          ["S", "U", "N", "T", "N", "O", "O", "M"],
-          ["T", "R", "E", "E", "S", "K", "Y", "T"],
-          ["A", "I", "R", "F", "I", "R", "E", "A"],
-          ["R", "O", "C", "K", "S", "T", "A", "R"],
-          ["B", "I", "R", "D", "S", "F", "I", "S"],
+          ["D", "K", "I", "T", "E", "O", "Q", "C"],
+          ["H", "E", "E", "L", "P", "P", "A", "A"],
+          ["S", "E", "E", "M", "U", "T", "T", "T"],
+          ["M", "T", "N", "R", "Z", "H", "O", "L"],
+          ["A", "K", "A", "I", "R", "G", "R", "I"],
+          ["R", "B", "S", "R", "T", "I", "R", "G"],
+          ["T", "U", "A", "U", "O", "E", "A", "E"],
+          ["L", "S", "T", "N", "H", "X", "P", "R"],
         ],
-        words: ["CAT", "DOG", "SUN", "MOON", "TREE", "STAR", "BIRD", "CART", "ROCK", "FIRE"],
+        words: ["CAT", "APPLE", "LIGER", "PARROT", "EIGHT", "HOT", "BUS", "AIR", "RUN", "DEER", "MART", "KITE", "HEN", "SAT"],
       },
       {
         grid: [
-          ["B", "O", "O", "K", "S", "P", "E", "N"],
-          ["A", "P", "P", "L", "E", "C", "A", "R"],
-          ["L", "E", "M", "O", "N", "B", "U", "S"],
-          ["L", "A", "K", "E", "R", "I", "V", "E"],
-          ["H", "O", "U", "S", "E", "T", "R", "E"],
-          ["F", "L", "O", "W", "E", "R", "S", "A"],
-          ["G", "R", "A", "S", "S", "L", "E", "A"],
-          ["W", "I", "N", "D", "O", "W", "S", "F"],
+          ["L", "F", "L", "O", "W", "E", "R", "B"],
+          ["A", "N", "H", "N", "O", "T", "E", "S"],
+          ["M", "E", "A", "A", "X", "E", "S", "U"],
+          ["B", "T", "T", "E", "T", "C", "P", "N"],
+          ["B", "B", "U", "D", "E", "A", "R", "R"],
+          ["A", "Z", "O", "B", "G", "L", "I", "A"],
+          ["D", "A", "C", "O", "G", "L", "N", "I"],
+          ["B", "I", "R", "D", "K", "J", "G", "N"],
         ],
-        words: ["BOOK", "PEN", "APPLE", "CAR", "LEMON", "BUS", "LAKE", "RIVER", "HOUSE", "FLOWER"],
+        words: ["RAIN", "SPRING", "BUD", "EGG", "BIRD", "FLOWER", "LAMB", "NET", "HAT", "BOOK", "BAD", "AXE", "CALL", "NOTES", "SUN"],
       },
       {
         grid: [
-          ["H", "A", "P", "P", "Y", "S", "M", "I"],
-          ["E", "A", "R", "T", "H", "A", "I", "L"],
-          ["A", "R", "T", "I", "S", "T", "L", "E"],
-          ["R", "T", "M", "U", "S", "I", "C", "S"],
-          ["T", "Y", "P", "A", "I", "N", "T", "U"],
-          ["S", "I", "N", "G", "E", "R", "S", "N"],
-          ["D", "A", "N", "C", "E", "R", "A", "G"],
-          ["P", "L", "A", "Y", "E", "R", "D", "S"],
+          ["U", "L", "E", "B", "E", "D", "S", "S"],
+          ["R", "Y", "I", "L", "M", "O", "I", "P"],
+          ["E", "H", "B", "G", "O", "G", "G", "A"],
+          ["N", "D", "O", "O", "H", "S", "N", "C"],
+          ["T", "E", "A", "R", "U", "T", "A", "E"],
+          ["R", "A", "C", "N", "S", "N", "L", "H"],
+          ["E", "X", "G", "K", "C", "E", "C", "O"],
+          ["E", "E", "M", "A", "N", "E", "R", "E"]
         ],
-        words: ["HAPPY", "SMILE", "HEART", "EARTH", "ART", "MUSIC", "PAINT", "SINGER", "DANCE", "PLAY"],
+        words: [
+          "SIGNAL",
+          "SPACE",
+          "MAN",
+          "LIGHT",
+          "EYE",
+          "NECK",
+          "TREE",
+          "DOGS", "AXE", "HORSE", "HOME", "DANCE", "BOUNCE"
+        ]
       },
     ],
   }
@@ -652,13 +661,13 @@ document.addEventListener("DOMContentLoaded", async () => {
           e.preventDefault()
           if (!gameState.selectedCells.includes(focusedElement)) {
             handleStartSelection({
-              preventDefault: () => {},
+              preventDefault: () => { },
               type: "keyboard",
               target: focusedElement,
             })
           } else {
             handleEndSelection({
-              preventDefault: () => {},
+              preventDefault: () => { },
               type: "keyboard",
             })
           }
