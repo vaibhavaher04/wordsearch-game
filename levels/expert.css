@@ -167,13 +167,28 @@ body {
   padding: 0.5rem 1rem;
   border: none;
   border-radius: var(--border-radius-sm);
-  background: rgba(233, 69, 96, 0.2);
-  color: white;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
   font-weight: 500;
   cursor: pointer;
   transition: var(--transition-normal);
   backdrop-filter: blur(5px);
-  border: 1px solid rgba(233, 69, 96, 0.4);
+  border: 1px solid rgba(233, 69, 96, 0.3);
+  min-width: 120px;
+}
+
+/* Style the dropdown options */
+.difficulty-select option {
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+  padding: 0.5rem;
+  font-weight: 500;
+}
+
+.difficulty-select option:hover,
+.difficulty-select option:checked {
+  background-color: var(--primary-color);
+  color: var(--text-primary);
 }
 
 .difficulty-select:focus {
