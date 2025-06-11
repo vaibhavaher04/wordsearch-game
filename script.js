@@ -276,3 +276,13 @@ if ("serviceWorker" in navigator) {
       })
   })
 }
+
+// Update high score when page becomes visible (user returns from game)
+document.addEventListener("visibilitychange", () => {
+  if (!document.hidden) {
+    loadHighScore()
+  }
+})
+
+// Also update when page loads/focuses
+window.addEventListener("focus", loadHighScore)

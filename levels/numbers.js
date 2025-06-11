@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           "202",
           "131",
           "731",
-          "259", "830", "208", "264", "700", "175", "566", "300", "224", "904", "258", "431", "605", "234", "861", "016"
+          "259", "830", "920", "264", "700", "156", "566", "300", "224", "258", "431", "605", "234", "016"
         ],
       },
       {
@@ -131,6 +131,13 @@ document.addEventListener("DOMContentLoaded", async () => {
   const foundCountElement = document.getElementById("foundCount")
   const totalCountElement = document.getElementById("totalCount")
 
+  const congratsOverlay = document.getElementById("congratsOverlay")
+  const nextLevelBtn = document.getElementById("nextLevelBtn")
+  const foundAllCountElement = document.getElementById("foundAllCount")
+  const completionTimeElement = document.getElementById("completionTime")
+  const confettiCanvas = document.getElementById("confettiCanvas")
+  const closeCongratsBtn = document.getElementById("closeCongratsBtn")
+
   // Initialize the game
   initGame()
 
@@ -146,6 +153,10 @@ document.addEventListener("DOMContentLoaded", async () => {
   difficultySelect.addEventListener("change", changeDifficulty)
   extendTimeBtn.addEventListener("click", extendTime)
   acceptFateBtn.addEventListener("click", acceptFate)
+  nextLevelBtn.addEventListener("click", switchToNextGrid)
+  // Hide congrats overlay if visible
+  congratsOverlay.classList.remove("show")
+  closeCongratsBtn.addEventListener("click", hideCongratsOverlay)
 
   // Touch/mouse event handlers
   numberGrid.addEventListener("mousedown", handleStartSelection)
@@ -281,6 +292,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   function switchToNextGrid() {
     // Show loading animation
     numberGrid.classList.add("loading")
+
+    hideCongratsOverlay()
 
     // Disable the button temporarily
     newGridBtn.disabled = true
@@ -1104,5 +1117,130 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // Update target numbers display to show the highlighted number
     renderTargetNumbers()
+  }
+
+  function startConfetti() {
+    const canvas = confettiCanvas
+    const ctx = canvas.getContext('2d')
+    canvas.width = window.innerWidth
+    canvas.height = window.innerHeight
+
+    // Confetti particles
+    const particles = []
+    const particleCount = 150
+
+    // Create particles
+    for (let i = 0; i < particleCount; i++) {
+      particles.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height - canvas.height,
+        size: Math.random() * 10 + 5,
+        color: `hsl(${Math.random() * 360}, 100%, 50%)`,
+        speed: Math.random() * 3 + 2,
+        angle: Math.random() * Math.PI * 2,
+        rotation: Math.random() * 0.2 - 0.1,
+        rotationSpeed: Math.random() * 0.01 - 0.005,
+        shape: Math.random() > 0.5 ? 'circle' : 'rect'
+      })
+    }
+
+    // Animation function
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height)
+
+      for (let i = 0; i < particles.length; i++) {
+        const p = particles[i]
+
+        // Update position
+        p.y += p.speed
+        p.x += Math.sin(p.angle) * 0.5
+        p.angle += 0.01
+        p.rotation += p.rotationSpeed
+
+        // Reset particles that go off screen
+        if (p.y > canvas.height) {
+          p.y = -10
+          p.x = Math.random() * canvas.width
+        }
+
+        // Draw particle
+        ctx.save()
+        ctx.translate(p.x, p.y)
+        ctx.rotate(p.rotation)
+        ctx.fillStyle = p.color
+
+        if (p.shape === 'circle') {
+          ctx.beginPath()
+          ctx.arc(0, 0, p.size / 2, 0, Math.PI * 2)
+          ctx.fill()
+        } else {
+          ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size)
+        }
+
+        ctx.restore()
+      }
+
+      if (congratsOverlay.classList.contains('show')) {
+        requestAnimationFrame(animate)
+      }
+    }
+
+    // Start animation
+    animate()
+  }
+
+  function endGame(isWin) {
+    clearInterval(gameState.timerInterval)
+    gameState.isGameRunning = false
+    numberGrid.classList.add("game-over")
+
+    // Update button state
+    updateStartStopButton()
+    decreaseTimeBtn.disabled = false
+    increaseTimeBtn.disabled = false
+
+    // Disable grid interaction
+    updateGridInteraction()
+
+    if (isWin) {
+      // Show congratulations overlay
+      showCongratsOverlay()
+      playSound("win")
+    } else {
+      playSound("lose")
+      // Show game over overlay
+      showGameOverOverlay()
+    }
+  }
+
+  function showCongratsOverlay() {
+    const foundCount = gameState.foundNumbers.length
+    const timeTaken = gameState.originalGameTime - gameState.gameTime
+    const minutes = Math.floor(timeTaken / 60)
+    const seconds = timeTaken % 60
+
+    foundAllCountElement.textContent = foundCount
+    completionTimeElement.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`
+
+    congratsOverlay.classList.add("show")
+    startConfetti()
+  }
+
+
+  function hideCongratsOverlay() {
+    congratsOverlay.classList.remove("show")
+  }
+
+  function showCongratsOverlay() {
+    const foundCount = gameState.foundNumbers.length
+    const timeTaken = gameState.originalGameTime - gameState.gameTime
+    const minutes = Math.floor(timeTaken / 60)
+    const seconds = timeTaken % 60
+
+    foundAllCountElement.textContent = foundCount
+    completionTimeElement.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`
+
+    congratsOverlay.classList.add("show")
+    startConfetti()
   }
 })

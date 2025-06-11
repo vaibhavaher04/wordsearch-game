@@ -89,13 +89,16 @@ body {
 }
 
 @keyframes float {
+
   0%,
   100% {
     transform: translateY(0px) rotate(0deg);
   }
+
   33% {
     transform: translateY(-30px) rotate(120deg);
   }
+
   66% {
     transform: translateY(20px) rotate(240deg);
   }
@@ -161,7 +164,8 @@ body {
   transition: var(--transition-normal);
   backdrop-filter: blur(5px);
   border: 1px solid rgba(255, 255, 255, 0.3);
-  min-width: 120px;  /* Added this line */
+  min-width: 120px;
+  /* Added this line */
 }
 
 /* Style the dropdown options */
@@ -262,10 +266,12 @@ body {
 }
 
 @keyframes pulse-selection {
+
   0%,
   100% {
     opacity: 0.7;
   }
+
   50% {
     opacity: 0.9;
   }
@@ -334,9 +340,11 @@ body {
   0% {
     transform: scale(1);
   }
+
   50% {
     transform: scale(1.2);
   }
+
   100% {
     transform: scale(1);
   }
@@ -548,21 +556,25 @@ body {
   background-color: rgba(247, 37, 133, 0.3);
   animation: hint-pulse 2s infinite;
 }
+
 .cell.hint-2 {
   background-color: rgba(67, 97, 238, 0.3);
   animation: hint-pulse 2s infinite;
   animation-delay: 0.4s;
 }
+
 .cell.hint-3 {
   background-color: rgba(76, 201, 240, 0.3);
   animation: hint-pulse 2s infinite;
   animation-delay: 0.8s;
 }
+
 .cell.hint-4 {
   background-color: rgba(58, 12, 163, 0.3);
   animation: hint-pulse 2s infinite;
   animation-delay: 1.2s;
 }
+
 .cell.hint-5 {
   background-color: rgba(255, 209, 102, 0.3);
   animation: hint-pulse 2s infinite;
@@ -570,10 +582,12 @@ body {
 }
 
 @keyframes hint-pulse {
+
   0%,
   100% {
     opacity: 0.3;
   }
+
   50% {
     opacity: 0.8;
   }
@@ -708,12 +722,15 @@ body {
     transform: scale(0.3);
     opacity: 0;
   }
+
   50% {
     transform: scale(1.05);
   }
+
   70% {
     transform: scale(0.9);
   }
+
   100% {
     transform: scale(1);
     opacity: 1;
@@ -792,10 +809,12 @@ body {
 }
 
 @keyframes pulseWarning {
+
   0%,
   100% {
     opacity: 1;
   }
+
   50% {
     opacity: 0.7;
   }
@@ -825,6 +844,7 @@ body {
   0% {
     transform: rotate(0deg);
   }
+
   100% {
     transform: rotate(360deg);
   }
@@ -834,6 +854,186 @@ body {
 .game-over .cell {
   opacity: 0.7;
   pointer-events: none;
+}
+
+/* Congratulations Overlay */
+.congrats-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  z-index: 1001;
+  backdrop-filter: blur(5px);
+  padding: 1rem;
+}
+
+.congrats-overlay.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+.congrats-content {
+  background: white;
+  padding: 2.5rem;
+  border-radius: var(--border-radius-lg);
+  text-align: center;
+  box-shadow: var(--shadow-lg);
+  transform: scale(0.8);
+  transition: transform 0.3s ease;
+  max-width: 450px;
+  width: 100%;
+  position: relative;
+  z-index: 2;
+}
+
+.congrats-overlay.show .congrats-content {
+  transform: scale(1);
+  animation: bounceIn 0.6s ease;
+}
+
+.close-btn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: var(--transition-fast);
+  padding: 0.5rem;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.close-btn:hover {
+  color: var(--danger-color);
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.congrats-icon {
+  font-size: 3rem;
+  color: var(--warning-color);
+  margin-bottom: 1.5rem;
+  animation: pulse 2s infinite;
+}
+
+.congrats-title {
+  font-size: 1.8rem;
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--accent-color), var(--primary-color));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.congrats-message {
+  font-size: 1.2rem;
+  color: var(--text-primary);
+  margin-bottom: 2rem;
+  line-height: 1.5;
+}
+
+.congrats-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.congrats-btn {
+  padding: 0.8rem 1.2rem;
+  border: none;
+  border-radius: var(--border-radius-md);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition-normal);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 140px;
+  justify-content: center;
+  box-shadow: var(--shadow-md);
+}
+
+.next-btn {
+  background: linear-gradient(135deg, var(--success-color), var(--primary-color));
+  color: white;
+}
+
+.next-btn:hover {
+  background: linear-gradient(135deg, #3db8df, #3251dd);
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lg);
+}
+
+#confettiCanvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .congrats-content {
+    padding: 2rem 1.5rem;
+  }
+  
+  .congrats-title {
+    font-size: 1.6rem;
+  }
+  
+  .congrats-message {
+    font-size: 1.1rem;
+  }
+  
+  .congrats-btn {
+    padding: 0.7rem 1rem;
+    font-size: 0.9rem;
+    min-width: 120px;
+  }
+}
+
+@media (max-width: 480px) {
+  .congrats-content {
+    padding: 1.5rem 1rem;
+  }
+  
+  .congrats-title {
+    font-size: 1.4rem;
+  }
+  
+  .congrats-message {
+    font-size: 1rem;
+  }
+  
+  .congrats-btn {
+    padding: 0.6rem 0.8rem;
+    font-size: 0.8rem;
+    min-width: 100px;
+  }
+  
+  .congrats-icon {
+    font-size: 2.5rem;
+  }
 }
 
 /* Responsive Styles */

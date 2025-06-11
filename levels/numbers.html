@@ -1,13 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Number Search Game</title>
     <link rel="stylesheet" href="numbers.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
+
 <body>
     <div class="game-container">
         <!-- Background Elements -->
@@ -40,7 +43,7 @@
                 <div class="grid-wrapper">
                     <div class="grid" id="numberGrid"></div>
                 </div>
-                
+
                 <!-- Game Over Overlay -->
                 <div class="game-over-overlay" id="gameOverOverlay">
                     <div class="game-over-content">
@@ -63,8 +66,33 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Congratulations Overlay -->
+                <div class="congrats-overlay" id="congratsOverlay">
+                    <div class="congrats-content">
+                        <button class="close-btn" id="closeCongratsBtn" aria-label="Close congratulations">
+                            <i class="fas fa-times"></i>
+                        </button>
+                        <div class="congrats-icon">
+                            <i class="fas fa-trophy"></i>
+                        </div>
+                        <h2 class="congrats-title">Congratulations!</h2>
+                        <p class="congrats-message" id="congratsMessage">
+                            You found all <span id="foundAllCount">0</span> numbers in <span
+                                id="completionTime">0:00</span>!
+                        </p>
+                        <div class="congrats-buttons">
+                            <button id="nextLevelBtn" class="congrats-btn next-btn">
+                                <i class="fas fa-arrow-right"></i>
+                                Next Level
+                            </button>
+                        </div>
+                    </div>
+                    <canvas id="confettiCanvas"></canvas>
+                </div>
+
             </div>
-            
+
             <div class="controls-container">
                 <div class="game-stats">
                     <div class="score-container">
@@ -77,7 +105,7 @@
                             <span class="score-value" id="maxScore">0</span>
                         </div>
                     </div>
-                    
+
                     <div class="timer-container">
                         <div class="timer-controls">
                             <button id="decreaseTime" class="time-btn" aria-label="Decrease time">
@@ -96,7 +124,7 @@
                         </button>
                     </div>
                 </div>
-                
+
                 <div class="target-container">
                     <div class="target-header">
                         <h2>Numbers to Find</h2>
@@ -106,7 +134,7 @@
                     </div>
                     <div class="target-numbers" id="targetNumbers"></div>
                 </div>
-                
+
                 <div class="buttons-container">
                     <button id="newGridBtn" class="game-btn">
                         <i class="fas fa-sync-alt"></i> New Grid
@@ -115,11 +143,12 @@
                         <i class="fas fa-home"></i> Main Menu
                     </button>
                 </div>
-                
+
                 <div class="message" id="message"></div>
             </div>
         </main>
     </div>
     <script src="numbers.js"></script>
 </body>
+
 </html>
